@@ -1,9 +1,16 @@
-# add honor pledge
-# I already know how to use the command line. I am BORED.
-# this is a comment 
-# *.thing in makefile is %.thing, cool
-# something about $ and macros....idk...
+#   Honor Pledge: I  pledge that I have neither
+#   given nor receieved any help on this assignment.
+#
+#   daelevan
+#
+#   Assignment #2 makefile
+#   Created By: Darlene Evans
+
   
 run: 
-	g++ *.cpp -o *.o
+	g++ Candy.cpp -o Candy.o
+
+clean: 
+	rm *.o
+
 

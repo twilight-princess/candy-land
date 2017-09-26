@@ -1,84 +1,98 @@
 #include <iostream>
 #include <stdlib.h>
 #include <ctime>
-
 #define GAME_LENGTH 50
-/******************************* 
-void advancePlayerA(int* ptrPlayerA)
-{
-	int advanceA = rand() % 10;
-		if (advanceA <=3){
-			space[] = space[] + forwardOne;
-		}else if (advanceA <=5){
-			space[] = space[] + forwardTwo;
-		}else if (advanceA <=6){
-			space[] = space[] + mountainPass;
-		}else if (advanceA <=7){
-			space[] = space[] + rainbowTrail;
-		}else if (advanceA <=8){
-			space[] = space[] - cherryPitfalls;
-		}else{
-			space[] = space[] - molassesSwamp;  
-	advancePlayerB();			 	 	
-}
-void advancePlayerB(int* ptrPlayerB)
-{
-	int advanceB = rand() % 10;	
-    if (advanceB <=3){
-      space[] = space[] + forwardOne;
-    }else if (advanceB <=5){
-      space[] = space[] + forwardTwo;
-    }else if (advanceB <=6){
-      space[] = space[] + mountainPass;
-    }else if (advanceB <=7){
-    }else if (advanceB <=8){
-      space[] = space[] - cherryPitfalls;
-    }else{
-      space[] = space[] - molassesSwamp;
-			
-}
-*/
-void printPosition(int* ptrPlayerA, int* ptrPlayerB)
-{
-        /*char space[50];
-	for (int i = 0; i < 51; i++){
-		space[i] = ' ';*/
-	//Ensure that players do not occupy the same space.
-	int valPlayA = *ptrPlayerA;
-	int valPlayB = *ptrPlayerB;
 
-	std::cout << valPlayA << ' ' << valPlayB << std::endl;
-	if (valPlayA == valPlayB) {
-		valPlayA -= 1;
+#define FORWARDONE 1
+#define FORWARDTWO 2
+#define MOUNTAINPASS 3
+#define RAINBOWTRAIL 5
+#define CHERRYPITFALLS -3
+#define MOLASSESSWAMP -5
+
+char* board[50];
+
+void advancePlayerA(int* ptrPlayerA);
+void advancePlayerB(int* ptrPlayerB);
+void printPosition(int* ptrPlayerA, int* ptrPlayerB);
+
+
+void advancePlayerA(int* ptrPlayerA){
+	
+ 	srand(time(NULL));	
+	int x = rand() % 10;
+	int jump;
+	if (x <=3){
+		jump = FORWARDONE;
+	}else if (x <=5){
+		jump = FORWARDTWO;
+	}else if (x <=6){
+		jump = MOUNTAINPASS;
+	}else if (x <=7){
+		jump = RAINBOWTRAIL;
+	}else if (x <=8){
+		jump = CHERRYPITFALLS;
+	}else{
+		jump = MOLASSESSWAMP;
+	}  
+	if (board[&ptrPlayerA + jump] == "B"){ 
+		jump -= 1;
 	}
-        std::cout << valPlayA << ' ' << valPlayB << std::endl;
-	std::string space (50, ' ');
-	space(valPlayA) = 'A';
-	space(valPlayB) = 'B';
-	std::cout << space << '|' << std::endl;
+	&ptrPlayerA += jump;	
+} 
 
+void advancePlayerB(int* ptrPlayerB){
+
+ 	srand(time(NULL));	
+	int x = rand() % 10;
+	int jump;
+	if (x <=2){
+		jump = FORWARDONE;
+	}else if (x <=3){
+		jump = FORWARDTWO;
+	}else if (x <=5){
+		jump = MOUNTAINPASS;
+	}else if (x <=6){
+		jump = RAINBOWTRAIL;
+	}else if (x <=8){
+		jump = CHERRYPITFALLS;
+	}else{
+		jump = MOLASSESSWAMP;
+	}  
+	if (&board[&ptrPlayerB + jump] == "A"){ 
+		jump -= 1;
+	}
+	&ptrPlayerB += jump;	
+}
+void printPosition(int* ptrPlayerA, int* ptrPlayerB){
+
+  for (int i = 0; i <= GAME_LENGTH; i++){
+		if (i == &ptrPlayerA){
+			std::cout << "A";
+		}else if (i == &ptrPlayerB){
+			std::cout << "B";
+		}else{
+			std::cout << " ";
+		}
+	}
+	std::cout << "|"; 
 }
 
 int main()
 {
-	srand(time(NULL));
-	int playA = 2;
-	int playB = 2;
-	int* ptrA = &playA;
-	int* ptrB = &playB;
-	printPosition(ptrA, ptrB);
-	/*
-	char space[50];
-		for (int i = 0; i < 51; i++){
-		 space[i] = ' ';
-		}
-
-	int forwardOne = 1;
-	int forwardTwo = 2;
-	int mountainPass = 3;
-	int rainbowTrail = 5;
-	int cherryPitfalls = 3;
-	int molassesSwamp = 5;
-	*/
-	//std::cout << space << '|' << std::endl;
+	int positionPlayerA = 0;
+	int positionPlayerB = 0;
+	bool endGame = &board[GAME_LENGTH-1] != " ";
+	while (!endGame){
+		advancePlayerA(&positionPlayerA);
+		advancePlayerB(&positionPlayerB);
+		printPosition(positionPlayerA, positionPlayerB);
+		endGame = &board[GAME_LENGTH-1] != " ";
+	} 
+	if (&board[GAME_LENGTH-1] == "A"){
+		std::cout << "You won!" << std::endl;
+	}else{
+		std::cout << "Your friend won!" << std::endl;
+	}
 }
+
