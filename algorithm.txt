@@ -1,1 +1,23 @@
-idk yet
+to move player A:
+
+get a random number between zero and nine
+
+1 digit = 10%
+2 digits = 20%
+3 digits = 30%
+etc.
+
+set desigated numbers to represent the options of moving because they're random
+
+go through each option and set that number to equal a number of moves for player A
+
+add that to where player one was before their turn (originally starting at zero)
+
+repeat this for player B with different probability
+
+if players land on the same space, player A must move back one
+
+print the "board" after each round
+
+once a player hits the 50th space, they win!
+

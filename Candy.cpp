@@ -3,6 +3,7 @@
 #include <ctime>
 #define GAME_LENGTH 50
 
+// They options for spaced to jump do not change so they can be saved globally
 #define FORWARDONE 1
 #define FORWARDTWO 2
 #define MOUNTAINPASS 3
@@ -10,16 +11,14 @@
 #define CHERRYPITFALLS -3
 #define MOLASSESSWAMP -5
 
-char* board[50];
-
+// Tells main which functions are going to exist and what they will return 
 void advancePlayerA(int* ptrPlayerA);
 void advancePlayerB(int* ptrPlayerB);
 void printPosition(int* ptrPlayerA, int* ptrPlayerB);
 
-
-void advancePlayerA(int* ptrPlayerA){
-	
- 	srand(time(NULL));	
+// This function takes a turn for player A
+void advancePlayerA(int* ptrPlayerA){		
+	// x receives a random integer and passes out probabilities. Then it assigns a variable jump and add it to player A's position  
 	int x = rand() % 10;
 	int jump;
 	if (x <=3){
@@ -34,16 +33,19 @@ void advancePlayerA(int* ptrPlayerA){
 		jump = CHERRYPITFALLS;
 	}else{
 		jump = MOLASSESSWAMP;
-	}  
-	if (board[*ptrPlayerA + jump] == "B"){ 
-		jump -= 1;
 	}
-	*ptrPlayerA += jump;	
+	*ptrPlayerA += jump;
+	// Does not let player A get moved behind 0 or above 50
+	if (*ptrPlayerA < 0){
+		*ptrPlayerA = 0;
+	}else if (*ptrPlayerA > 50){
+		*ptrPlayerA = 50;
+	}
 } 
 
+// This function takes a turn for player B
 void advancePlayerB(int* ptrPlayerB){
-
- 	srand(time(NULL));	
+	// x receives a random integer and passes out probabilities. Then it assigns a variable jump and add it to player B's position
 	int x = rand() % 10;
 	int jump;
 	if (x <=2){
@@ -58,40 +60,64 @@ void advancePlayerB(int* ptrPlayerB){
 		jump = CHERRYPITFALLS;
 	}else{
 		jump = MOLASSESSWAMP;
-	}  
-	if (board[*ptrPlayerB + jump] == "A"){ 
-		jump -= 1;
 	}
-	*ptrPlayerB += jump;	
+	*ptrPlayerB += jump;
+	// Does not let player B get moved behind 0 or above 50
+	if (*ptrPlayerB < 0){
+		*ptrPlayerB = 0;
+	}else if (*ptrPlayerB > 50){
+		*ptrPlayerB = 50;
+	}
 }
+
+// This function will print the board
 void printPosition(int* ptrPlayerA, int* ptrPlayerB){
-
-  for (int i = 0; i <= GAME_LENGTH; i++){
-		if (i == *ptrPlayerA){
-			std::cout << "A";
-		}else if (i == *ptrPlayerB){
-			std::cout << "B";
-		}else{
-			std::cout << ' ';
-		}
+	// Since player A takes a turn first, if B lands on 50 after A, B will have to move back one space
+	if (*ptrPlayerB == 50 && *ptrPlayerA == 50){ 
+		*ptrPlayerB -=1;
+	// if player A and B are on the same space, player A must move back one
+	}else if (*ptrPlayerA == *ptrPlayerB){
+		*ptrPlayerA -=1;
 	}
-	std::cout << "|"; 
+	if (*ptrPlayerA < 0){
+		*ptrPlayerA = 0;
+	}
+	// sets a string for the board of 50 empty spaces
+	std::string board(51, ' ');
+	// sets the value at ptrPlayerA(or B) to fill the space in the string
+	board[*ptrPlayerA] = 'A';
+	board[*ptrPlayerB] = 'B';
+	std::cout << board << "|" << std::endl;
 }
 
-int main()
-{
-	int* positionPlayerA = 0;
-	int* positionPlayerB = 0;
-	bool endGame = *board[GAME_LENGTH-1] != ' ';
-	while (!endGame){
-		advancePlayerA(positionPlayerA);
-		advancePlayerB(positionPlayerB);
-		printPosition(positionPlayerA, positionPlayerB);
-		endGame = *board[GAME_LENGTH-1] != ' ';
+int main(){
+	// assigns variables and pointers
+	srand(time(NULL));
+	int positionPlayerA = 0;
+	int positionPlayerB = 0;
+	int* ptrToA = &positionPlayerA;
+	int* ptrToB = &positionPlayerB;
+	int keepGoing = 0;
+	
+	// keeps the game going until a player reaches space 50
+	while (keepGoing < 50){
+		advancePlayerA(ptrToA);
+		advancePlayerB(ptrToB);
+		printPosition(ptrToA, ptrToB);
+		// gets position of A and B
+		positionPlayerA = *ptrToA;
+		positionPlayerB = *ptrToB;
+		// uses place of whichever is higher to keepGoing
+		if (positionPlayerA > positionPlayerB){
+			keepGoing = positionPlayerA;
+		}else{
+			keepGoing = positionPlayerB;
+		}	
 	} 
-	if (board[GAME_LENGTH-1] == "A"){
+	// prints winner
+	if (positionPlayerA == 50){
 		std::cout << "You won!" << std::endl;
-	}else{
+	}else if (positionPlayerB == 50){
 		std::cout << "Your friend won!" << std::endl;
 	}
 }

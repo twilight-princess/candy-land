@@ -12,5 +12,9 @@ run:
 
 clean: 
 	rm *.o
+	rm a.out
+
+candy: Candy.o
+	./Candy.o
 
 
