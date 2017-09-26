@@ -35,10 +35,10 @@ void advancePlayerA(int* ptrPlayerA){
 	}else{
 		jump = MOLASSESSWAMP;
 	}  
-	if (board[&ptrPlayerA + jump] == "B"){ 
+	if (board[*ptrPlayerA + jump] == "B"){ 
 		jump -= 1;
 	}
-	&ptrPlayerA += jump;	
+	*ptrPlayerA += jump;	
 } 
 
 void advancePlayerB(int* ptrPlayerB){
@@ -59,20 +59,20 @@ void advancePlayerB(int* ptrPlayerB){
 	}else{
 		jump = MOLASSESSWAMP;
 	}  
-	if (&board[&ptrPlayerB + jump] == "A"){ 
+	if (board[*ptrPlayerB + jump] == "A"){ 
 		jump -= 1;
 	}
-	&ptrPlayerB += jump;	
+	*ptrPlayerB += jump;	
 }
 void printPosition(int* ptrPlayerA, int* ptrPlayerB){
 
   for (int i = 0; i <= GAME_LENGTH; i++){
-		if (i == &ptrPlayerA){
+		if (i == *ptrPlayerA){
 			std::cout << "A";
-		}else if (i == &ptrPlayerB){
+		}else if (i == *ptrPlayerB){
 			std::cout << "B";
 		}else{
-			std::cout << " ";
+			std::cout << ' ';
 		}
 	}
 	std::cout << "|"; 
@@ -80,16 +80,16 @@ void printPosition(int* ptrPlayerA, int* ptrPlayerB){
 
 int main()
 {
-	int positionPlayerA = 0;
-	int positionPlayerB = 0;
-	bool endGame = &board[GAME_LENGTH-1] != " ";
+	int* positionPlayerA = 0;
+	int* positionPlayerB = 0;
+	bool endGame = *board[GAME_LENGTH-1] != ' ';
 	while (!endGame){
-		advancePlayerA(&positionPlayerA);
-		advancePlayerB(&positionPlayerB);
+		advancePlayerA(positionPlayerA);
+		advancePlayerB(positionPlayerB);
 		printPosition(positionPlayerA, positionPlayerB);
-		endGame = &board[GAME_LENGTH-1] != " ";
+		endGame = *board[GAME_LENGTH-1] != ' ';
 	} 
-	if (&board[GAME_LENGTH-1] == "A"){
+	if (board[GAME_LENGTH-1] == "A"){
 		std::cout << "You won!" << std::endl;
 	}else{
 		std::cout << "Your friend won!" << std::endl;
